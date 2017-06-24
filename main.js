@@ -3,8 +3,8 @@ var Container = PIXI.Container,
 	Graphics = PIXI.Graphics;
 
 var stage = new Container(),
-	game = new Container(),
-	final = new Container();
+		game = new Container(),
+		final = new Container();
 renderer = autoDetectRenderer(150, 150);
 
 var steps = [-3, 1, 3, -1]
@@ -76,12 +76,8 @@ var checkVictory = function() {
 		return el.id;
 	})
 
-	console.log(res);
-
 	let shouldBe = _.range(1, 9);
 	shouldBe.push(undefined);
-
-	console.log(shouldBe);
 
 	if (_.isEqual(res, shouldBe)) {
 		game.visible = false;
@@ -117,8 +113,6 @@ $(function() {
 	msg.position.set(30, 30);
 	final.addChild(msg);
 	stage.addChild(final)
-
-	console.log(matrix)
 
 	renderer.render(stage)
 })

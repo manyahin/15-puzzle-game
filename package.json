@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "browser-sync start --server --files \"**/*.js, **/*.html\""
   },
   "keywords": [],
   "author": "ilya",
   "license": "ISC",
   "dependencies": {
     "jquery": "^3.2.1",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "pixi.js": "^4.5.3"
   }
 }
