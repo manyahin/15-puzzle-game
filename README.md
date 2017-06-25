@@ -1,3 +1,5 @@
 # pytnashki
 
-[https://manyahin.github.io/pytnashki/]
+![screenshot](images/screen.png)
+
+https://manyahin.github.io/pytnashki/
