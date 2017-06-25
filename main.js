@@ -1,40 +1,46 @@
 var Container = PIXI.Container,
+	loader = PIXI.loader,
+	resources = PIXI.loader.resources,
+	TextureCache = PIXI.utils.TextureCache,
 	autoDetectRenderer = PIXI.autoDetectRenderer,
-	Graphics = PIXI.Graphics;
+	Graphics = PIXI.Graphics,
+	Sprite = PIXI.Sprite;
 
 var stage = new Container(),
 		game = new Container(),
 		final = new Container();
-renderer = autoDetectRenderer(150, 150);
+renderer = autoDetectRenderer(348, 348);
 
 var steps = [-3, 1, 3, -1]
 var matrix = Array(9)
 var cords = [
-	[0, 0],
-	[50, 0],
-	[100, 0],
-	[0, 50],
-	[50, 50],
-	[100, 50],
-	[0, 100],
-	[50, 100],
-	[100, 100]
+	[22, 22],
+	[124, 22],
+	[226, 22],
+	[22, 124],
+	[124, 124],
+	[226, 124],
+	[22, 226],
+	[124, 226],
+	[226, 226]
 ];
 
 var createCell = function(x, y, id) {
-	var cell = new Graphics();
-
-	cell.beginFill(0xFFFFFF);
-	cell.lineStyle(-1, 0xFF3300, 1);
-	cell.drawRect(0, 0, 50, 50);
-	cell.endFill();
+	var stoneTexture = TextureCache["stone1.png"];
+	var cell = new Sprite(stoneTexture);
 
 	cell.position.set(x, y);
 
 	var message = new PIXI.Text(id,
-		{fontFamily: "Arial", fontSize: 32, fill: "pink"}
+		{
+			fontFamily: "Serif", fontSize: 60, fill: 0x222222, fontWeight: 'bold',
+			dropShadow: true, dropShadowDistance: 1, dropShadowColor: 0xd6d6d6
+		}
 	);
-	message.position.set(15, 7);
+	message.alpha = 0.9
+	message.anchor.x = 0.5;
+	message.anchor.y = 0.5;
+	message.position.set(50, 50);
 	cell.addChild(message);
 
 	cell.id = id;
@@ -85,34 +91,34 @@ var checkVictory = function() {
 	}
 }
 
-$(function() {
+PIXI.loader
+	.add("images/assets.json")
+	.load(function() {
+		$('#game').append(renderer.view);
 
-	$('#game').append(renderer.view);
+		var gameTexture = TextureCache["frame.png"];
+		game = new Sprite(gameTexture);
+		game.visible = true;
+		stage.addChild(game)
 
-	renderer.backgroundColor = 0x061639;
-	renderer.view.style.border = "1px dashed black";
+		// Create cells
+		var cells = _.shuffle(_.range(8));
+		for (var i = 0; i < cells.length; i++) {
+			let cellPos = cells[i];
+			var cell = createCell(
+				cords[cellPos][0],
+				cords[cellPos][1],
+				i + 1 // Cell ID starts from 1
+			);
+			matrix[cellPos] = {id: cell.id};
+		}
+		delete(cells);
 
-	// Create cells
-	var cells = _.shuffle(_.range(8));
-	for (var i = 0; i < cells.length; i++) {
-		let cellPos = cells[i];
-		var cell = createCell(
-			cords[cellPos][0],
-			cords[cellPos][1],
-			i + 1 // Cell ID starts from 1
-		);
-		matrix[cellPos] = {id: cell.id};
-	}
-	delete(cells);
+		final.visible = false;
+		let msg = new PIXI.Text('You won!', {font: "20px Future", fill: "white"});
+		msg.position.set(30, 30);
+		final.addChild(msg);
+		stage.addChild(final)
 
-	game.visible = true;
-	stage.addChild(game)
-
-	final.visible = false;
-	let msg = new PIXI.Text('You won!', {font: "20px Future", fill: "white"});
-	msg.position.set(30, 30);
-	final.addChild(msg);
-	stage.addChild(final)
-
-	renderer.render(stage)
-})
+		renderer.render(stage)
+	});

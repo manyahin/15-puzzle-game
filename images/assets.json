@@ -1,0 +1,30 @@
+{"frames": {
+
+"frame.png":
+{
+	"frame": {"x":0,"y":0,"w":348,"h":348},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":348,"h":348},
+	"sourceSize": {"w":348,"h":348},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"stone1.png":
+{
+	"frame": {"x":348,"y":0,"w":100,"h":100},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":100},
+	"sourceSize": {"w":100,"h":100},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "assets.png",
+	"format": "RGBA8888",
+	"size": {"w":448,"h":348},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:f781381f31b6d54b75c920267b6e6431:38dffc0292cecd6af228d137443a7bbe:a759b6bbc8381ac9c472b28f589ad0d6$"
+}
+}
