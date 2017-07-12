@@ -25,7 +25,7 @@ let cords = [
     [226, 226]
 ];
 
-let createCell = function(x, y, id) {
+let createCell = (x, y, id) => {
     let stoneTexture = TextureCache['stone' + id + '.png'];
     let cell = new Sprite(stoneTexture);
     cell.position.set(x, y);
@@ -112,7 +112,7 @@ let clickOnCell = function(e) {
     }
 }
 
-let checkVictory = function() {
+let checkVictory = () => {
     let res = matrix.map((el) => {
         if (el == undefined) return;
         return el.id;
@@ -127,35 +127,37 @@ let checkVictory = function() {
     }
 }
 
+let initGame = () => {
+    $('#game').append(renderer.view);
+
+    let gameTexture = TextureCache['frame.png'];
+    game = new Sprite(gameTexture);
+    game.visible = true;
+    stage.addChild(game)
+
+    // Create tiles
+    let cells = _.shuffle(_.range(8));
+    for (let i = 0; i < cells.length; i++) {
+        let cellPos = cells[i];
+        let cell = createCell(
+            cords[cellPos][0],
+            cords[cellPos][1],
+            i + 1 // Cell ID starts from 1
+        );
+        matrix[cellPos] = {id: cell.id};
+    }
+    delete(cells);
+
+    final.visible = false;
+    let msg = new PIXI.Text('You won!', {font: "20px Future", fill: "white"});
+    msg.position.set(30, 30);
+    final.addChild(msg);
+    stage.addChild(final)
+
+    renderer.render(stage)
+}
+
 PIXI.loader
     .add("images/assets.json")
-    .load(function() {
-        $('#game').append(renderer.view);
-
-        let gameTexture = TextureCache["frame.png"];
-        game = new Sprite(gameTexture);
-        game.visible = true;
-        stage.addChild(game)
-
-        // Create tiles
-        let cells = _.shuffle(_.range(8));
-        for (let i = 0; i < cells.length; i++) {
-            let cellPos = cells[i];
-            let cell = createCell(
-                cords[cellPos][0],
-                cords[cellPos][1],
-                i + 1 // Cell ID starts from 1
-            );
-            matrix[cellPos] = {id: cell.id};
-        }
-        delete(cells);
-
-        final.visible = false;
-        let msg = new PIXI.Text('You won!', {font: "20px Future", fill: "white"});
-        msg.position.set(30, 30);
-        final.addChild(msg);
-        stage.addChild(final)
-
-        renderer.render(stage)
-    });
+    .load(initGame);
 
