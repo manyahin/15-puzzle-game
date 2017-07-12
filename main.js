@@ -1,4 +1,4 @@
-var Container = PIXI.Container,
+let Container = PIXI.Container,
     loader = PIXI.loader,
     resources = PIXI.loader.resources,
     TextureCache = PIXI.utils.TextureCache,
@@ -7,14 +7,13 @@ var Container = PIXI.Container,
     Sprite = PIXI.Sprite,
     ticker = new PIXI.ticker.Ticker();
 
-var stage = new Container(),
+let stage = new Container(),
     game = new Container(),
     final = new Container(),
     renderer = autoDetectRenderer(348, 348);
 
-var steps = [-3, 1, 3, -1]
-var matrix = Array(9)
-var cords = [
+let matrix = Array(9)
+let cords = [
     [22, 22],
     [124, 22],
     [226, 22],
@@ -26,13 +25,12 @@ var cords = [
     [226, 226]
 ];
 
-var createCell = function(x, y, id) {
-    var stoneTexture = TextureCache['stone' + id + '.png'];
-    var cell = new Sprite(stoneTexture);
-
+let createCell = function(x, y, id) {
+    let stoneTexture = TextureCache['stone' + id + '.png'];
+    let cell = new Sprite(stoneTexture);
     cell.position.set(x, y);
 
-    var message = new PIXI.Text(id, {
+    let message = new PIXI.Text(id, {
         fontFamily: "Serif", fontSize: 60, fill: 0x222222, fontWeight: 'bold',
         dropShadow: true, dropShadowDistance: 1, dropShadowColor: 0xd6d6d6
     });
@@ -47,30 +45,34 @@ var createCell = function(x, y, id) {
     cell.buttonMode = true;
 
     cell.on('click', clickOnCell);
-
     game.addChild(cell);
 
     return cell;
 };
 
-var clickOnCell = function(e) {
-    var self = this;
-    let currentPos = _.findIndex(matrix, {id: this.id})
-    var newPosition = undefined;
-    steps.forEach((s) => {
-    let pos = currentPos + s
-    if (pos >= 0 && pos < matrix.length && matrix[pos] == undefined) {
-      newPosition = pos;
-      return false;
-    }
+let clickOnCell = function(e) {
+    let curPos = _.findIndex(matrix, {id: this.id})
+    let newPos = undefined;
+    [-3, 1, 3, -1].forEach((s) => {
+        let tmpPos = curPos + s
+        if (curPos == 2 && tmpPos == 3) return;
+        if (curPos == 3 && tmpPos == 2) return;
+        if (curPos == 5 && tmpPos == 6) return;
+        if (curPos == 6 && tmpPos == 5) return;
+        if (tmpPos >= 0 && tmpPos < matrix.length && matrix[tmpPos] == undefined) {
+          newPos = tmpPos;
+          delete(tmpPos);
+          return false;
+        }
     })
 
-    if (newPosition !== undefined) {
+    if (newPos !== undefined) {
+        // TODO: implement animation
         //ticker.add(function() {
         //  console.log(self.x, self.y);
         //
-        //  var toX = cords[newPosition][0];
-        //  var toY = cords[newPosition][1];
+        //  let toX = cords[newPos][0];
+        //  let toY = cords[newPos][1];
         //  console.log(toX, toY);
         //
         //  if (self.x != toX) {
@@ -100,9 +102,9 @@ var clickOnCell = function(e) {
         //})
         //ticker.start();
 
-        this.position.set(cords[newPosition][0], cords[newPosition][1]);
-        matrix[currentPos] = undefined;
-        matrix[newPosition] = {id: this.id}
+        this.position.set(cords[newPos][0], cords[newPos][1]);
+        matrix[curPos] = undefined;
+        matrix[newPos] = {id: this.id}
 
         renderer.render(stage);
 
@@ -110,7 +112,7 @@ var clickOnCell = function(e) {
     }
 }
 
-var checkVictory = function() {
+let checkVictory = function() {
     let res = matrix.map((el) => {
         if (el == undefined) return;
         return el.id;
@@ -130,16 +132,16 @@ PIXI.loader
     .load(function() {
         $('#game').append(renderer.view);
 
-        var gameTexture = TextureCache["frame.png"];
+        let gameTexture = TextureCache["frame.png"];
         game = new Sprite(gameTexture);
         game.visible = true;
         stage.addChild(game)
 
-        // Create cells
-        var cells = _.shuffle(_.range(8));
-        for (var i = 0; i < cells.length; i++) {
+        // Create tiles
+        let cells = _.shuffle(_.range(8));
+        for (let i = 0; i < cells.length; i++) {
             let cellPos = cells[i];
-            var cell = createCell(
+            let cell = createCell(
                 cords[cellPos][0],
                 cords[cellPos][1],
                 i + 1 // Cell ID starts from 1
