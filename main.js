@@ -124,6 +124,7 @@ let checkVictory = () => {
     if (_.isEqual(res, shouldBe)) {
         game.visible = false;
         final.visible = true;
+        renderer.render(stage);
     }
 }
 
@@ -136,7 +137,7 @@ let initGame = () => {
     stage.addChild(game)
 
     // Create tiles
-    let cells = _.shuffle(_.range(8));
+    let cells = generatePuzzle();
     for (let i = 0; i < cells.length; i++) {
         let cellPos = cells[i];
         let cell = createCell(
@@ -155,6 +156,32 @@ let initGame = () => {
     stage.addChild(final)
 
     renderer.render(stage)
+}
+
+const generatePuzzle = () => {
+    let pos = _.shuffle(_.range(8))
+
+    while (!checkPuzzleSolvability(pos))
+      pos = _.shuffle(_.range(8))
+
+    return pos 
+}
+
+// sum of invalid combination of each pair to check solvability
+// for 3x3 field the count of invalid pairs should be not even number
+const checkPuzzleSolvability = (arr) => {
+    const snakePath = [arr[0], arr[1], arr[2], arr[5], arr[4], arr[3], arr[6], arr[7]]
+    const res = {valid: 0, invalid: 0}
+
+    for (let i in snakePath) {
+      let range = snakePath.slice(+i+1, snakePath.length)
+      for (let j in range) {
+          if (snakePath[i] > range[j]) res.valid++
+          else res.invalid++
+      }
+    }
+
+    return (res.invalid % 2 !== 0)
 }
 
 PIXI.loader
