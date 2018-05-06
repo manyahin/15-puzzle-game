@@ -4,4 +4,4 @@
 
 ![screenshot](images/screen.png)
 
-https://manyahin.github.io/pytnashki/
+https://manyahin.github.io/15-puzzle-game/
